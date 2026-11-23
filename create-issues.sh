@@ -586,8 +586,8 @@ create_issue \
 create_issue \
   "Correction: Make EscrowDetails.status required" \
   "types/escrow.ts" \
-  "Change \`status?:\` to \`status:\` in \`EscrowDetails\` and add an \`Unknown\` fallback render in all consuming components so undefined status never breaks the UI." \
-  - Make \`status\` a required field on \`EscrowDetails\`.
+  "Change \`status?:\` to \`status:\` in \`EscrowDetails\` and add an \`Unknown\` fallback render in all consuming components so undefined status never breaks the UI.
+- Make \`status\` a required field on \`EscrowDetails\`.
 - Add \`Unknown\` to the \`EscrowStatus\` union if missing.
 - Add \`?? 'Unknown'\` fallback in \`formatEscrowStatus\` and style lookups." \
   "TypeScript" \
@@ -622,9 +622,9 @@ create_issue \
 create_issue \
   "Correction: MultiSigApprovals aria-disabled" \
   "components/wallet/MultiSigApprovals.tsx" \
-  "Add \`aria-disabled="true"\` to the disabled approval button and a live region announcing the current signature threshold status." \
+  "Add \`aria-disabled=\"true\"\` to the disabled approval button and a live region announcing the current signature threshold status." \
   "- Set \`aria-disabled\` based on whether the threshold is met.
-- Add an \`aria-live="polite"\` region for threshold updates.
+- Add an \`aria-live=\"polite\"\` region for threshold updates.
 - Verify screen readers announce 'disabled, X of Y signatures required'." \
   "Accessibility, ARIA" \
   "correct/multisig-aria-disabled" \
@@ -1210,7 +1210,7 @@ create_issue \
 - Assert \`onLock\` was not invoked." \
   "Jest, RTL" \
   "test/payment-lock-invalid" \
-  "- Invalid amount must not trigger onLock on Enter." \
+  "- Invalid amount must not trigger \`onLock\` on Enter." \
   "test(escrow): block invalid payment lock submission"
 
 create_issue \
@@ -1222,7 +1222,7 @@ create_issue \
 - Assert the permission-denied message is present." \
   "Jest, RTL" \
   "test/qr-scanner-permission" \
-  "- The UI must render a camera permission denied fallback when getUserMedia rejects." \
+  "- The UI must render a camera permission denied fallback when \`getUserMedia\` rejects." \
   "test(logistics): cover qr scanner permission fallback"
 
 create_issue \
@@ -1263,7 +1263,7 @@ create_issue \
 create_issue \
   "Test: MultiSigApprovals aria-disabled" \
   "components/wallet/__tests__/MultiSigApprovals.test.tsx" \
-  "When signatures are below the threshold, assert the approval button has \`aria-disabled="true"\`." \
+  "When signatures are below the threshold, assert the approval button has \`aria-disabled=\"true\"\`." \
   - Render MultiSigApprovals with 1 of 2 signatures.
 - Query the approval button and check \`aria-disabled\`.
 - Assert it equals \`true\`." \
