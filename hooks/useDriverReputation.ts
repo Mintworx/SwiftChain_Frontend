@@ -50,7 +50,7 @@ export function useDriverReputation(driverId: string): UseDriverReputationResult
           err instanceof Error && err.message
             ? err.message
             : 'Failed to load on-chain reputation';
-        setResult({ driverId, onChainScore: null, error: message });
+        setResult({ driverId, revision, onChainScore: null, error: message });
       });
 
     return () => {
