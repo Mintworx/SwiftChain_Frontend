@@ -11,7 +11,6 @@ import {
   AlertCircle,
   type LucideIcon,
 } from 'lucide-react';
-import { useAdminDashboard } from '@/hooks/useAdminDashboard';
 import type { AdminStats } from '@/services/adminService';
 
 
@@ -78,67 +77,6 @@ function StatCard({ label, value, icon: Icon, isLoading }: StatCardProps) {
   );
 }
 
-/**
- * Statistics — dashboard statistics section.
- *
- * Layered Architecture:
- *   Statistics (Component) → useAdminDashboard (Hook) → adminService (Service)
- *
- * The skeleton loaders share their wrapper with the loaded cards and reserve
- * fixed dimensions so replacing the loaders does not resize the grid.
- */
-export function Statistics() {
-  const { stats, isLoading, isError, refetch } = useAdminDashboard();
-  const { formatCurrency, isLoading: isCurrencyLoading } = useCurrency();
-
-  return (
-    <section>
-      <div className="mb-6 flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">Statistics</h2>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Platform-wide metrics and activity summary
-          </p>
-        </div>
-        <button
-          onClick={() => refetch()}
-          className="flex items-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:text-slate-400 dark:hover:bg-slate-800"
-        >
-          <RefreshCw className="h-4 w-4" />
-          Refresh
-        </button>
-      </div>
-
-      {isError && (
-        <div className="mb-6 flex items-center gap-3 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
-          <AlertCircle className="h-4 w-4 shrink-0" />
-          Failed to load statistics. Please refresh or try again later.
-        </div>
-      )}
-
-      <div
-        role="group"
-        aria-label="Platform statistics"
-        aria-busy={isLoading || isCurrencyLoading}
-        className="grid min-h-[56rem] w-full min-w-0 auto-rows-[8.5rem] gap-4 sm:min-h-[27.5rem] sm:grid-cols-2 lg:min-h-[18rem] lg:grid-cols-3"
-      >
-        {STAT_CARDS.map(({ key, label, icon, monetary }) => (
-          <StatCard
-            key={key}
-            label={label}
-            value={
-              monetary
-                ? formatCurrency(stats?.[key] ?? 0)
-                : (stats?.[key] ?? 0).toLocaleString()
-            }
-            icon={icon}
-            isLoading={isLoading || (Boolean(monetary) && isCurrencyLoading)}
-          />
-        ))}
-      </div>
-    </section>
-  );
-}
 interface StatisticsLayoutProps {
   stats?: AdminStats;
   isLoading: boolean;
