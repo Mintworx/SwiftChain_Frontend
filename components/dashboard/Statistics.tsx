@@ -46,14 +46,14 @@ interface StatCardProps {
  * value are rendered through this SAME element, so their box dimensions are
  * guaranteed identical and the grid cannot reflow when data lands.
  *
- * CLS is prevented at two levels:
- *   1. The card reserves a fixed height (`min-h-[8.5rem]`).
+ * Loading and loaded data use the same reserved boxes:
+ *   1. The card and grid row reserve a fixed height of 8.5rem.
  *   2. The value slot reserves the exact skeleton dimensions
- *      (`min-h-8 min-w-24`, matching the `h-8 w-24` skeleton bar).
+ *      (a full-width, 2rem-high slot for both skeleton and loaded value).
  */
 function StatCard({ label, value, icon: Icon, isLoading }: StatCardProps) {
   return (
-    <div className="flex min-h-[8.5rem] flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+    <div className="flex h-[8.5rem] min-h-[8.5rem] w-full min-w-0 flex-col justify-between rounded-xl border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
       <div className="mb-4 flex items-center justify-between">
         <span className="text-sm font-medium text-slate-500 dark:text-slate-400">
           {label}
@@ -65,11 +65,11 @@ function StatCard({ label, value, icon: Icon, isLoading }: StatCardProps) {
 
       {/* Value slot — hardcoded min dimensions matching the skeleton bar so the
           number and the loader occupy the exact same box (zero shift on swap). */}
-      <div className="flex min-h-8 min-w-24 items-center">
+      <div className="flex h-8 min-h-8 w-full min-w-0 items-center">
         {isLoading ? (
-          <div className="h-8 w-24 animate-pulse rounded-md bg-slate-200 dark:bg-slate-700" />
+          <div className="h-8 w-full animate-pulse rounded-md bg-slate-200 dark:bg-slate-700" />
         ) : (
-          <p className="text-2xl font-bold text-slate-900 dark:text-white">
+          <p title={value} className="w-full truncate text-2xl font-bold leading-8 tabular-nums text-slate-900 dark:text-white">
             {value}
           </p>
         )}
@@ -85,8 +85,7 @@ function StatCard({ label, value, icon: Icon, isLoading }: StatCardProps) {
  *   Statistics (Component) → useAdminDashboard (Hook) → adminService (Service)
  *
  * The skeleton loaders share their wrapper with the loaded cards and reserve
- * fixed min-height/min-width, so the section registers a Lighthouse CLS of 0.00
- * when API data replaces the loaders.
+ * fixed dimensions so replacing the loaders does not resize the grid.
  */
 export function Statistics() {
   const { stats, isLoading, isError, refetch } = useAdminDashboard();
@@ -117,7 +116,12 @@ export function Statistics() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div
+        role="group"
+        aria-label="Platform statistics"
+        aria-busy={isLoading || isCurrencyLoading}
+        className="grid min-h-[56rem] w-full min-w-0 auto-rows-[8.5rem] gap-4 sm:min-h-[27.5rem] sm:grid-cols-2 lg:min-h-[18rem] lg:grid-cols-3"
+      >
         {STAT_CARDS.map(({ key, label, icon, monetary }) => (
           <StatCard
             key={key}
